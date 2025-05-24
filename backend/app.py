@@ -42,8 +42,16 @@ if st.button("Get Funny Answer"):
         st.write(funny_reply)
         
         # Generate and display image
-        img_path = generate_image(funny_reply[:100])
-        if os.path.exists(img_path):
-            st.image(img_path)
-        else:
-            st.error("Failed to generate image. Please try again.")
+        with st.spinner('Generating image...'):
+            img_path = generate_image(funny_reply[:100])
+            if os.path.exists(img_path):
+                try:
+                    st.image(img_path, caption="Generated Image")
+                except Exception as e:
+                    st.error(f"Error displaying image: {str(e)}")
+                    st.info("Showing default image instead")
+                    default_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "default_image.png")
+                    if os.path.exists(default_path):
+                        st.image(default_path)
+            else:
+                st.error("Failed to generate image. Please try again.")

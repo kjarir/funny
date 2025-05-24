@@ -9,7 +9,7 @@ from create_default_image import create_default_image
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Using a different model that's more accessible
-API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
+API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 API_TOKEN = "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"
 
 headers = {
@@ -36,7 +36,9 @@ def generate_image(prompt):
                 "parameters": {
                     "negative_prompt": "ugly, blurry, poor quality, distorted",
                     "num_inference_steps": 30,
-                    "guidance_scale": 7.5
+                    "guidance_scale": 7.5,
+                    "width": 512,
+                    "height": 512
                 }
             }
         )
@@ -52,6 +54,12 @@ def generate_image(prompt):
             return temp_path
         else:
             print(f"Error: {response.status_code}, {response.text}")
+            # Try to get more information about the error
+            try:
+                error_details = response.json()
+                print(f"Error details: {error_details}")
+            except:
+                pass
             # Return the default image path
             return default_image_path
             
