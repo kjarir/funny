@@ -9,8 +9,8 @@ from create_default_image import create_default_image
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Using a different model that's more accessible
-API_URL = "https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4"
-API_TOKEN = "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"
+API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
+API_TOKEN = "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"
 
 headers = {
     "Authorization": f"Bearer {API_TOKEN}",
@@ -31,7 +31,14 @@ def generate_image(prompt):
         response = requests.post(
             API_URL,
             headers=headers,
-            json={"inputs": full_prompt}
+            json={
+                "inputs": full_prompt,
+                "parameters": {
+                    "negative_prompt": "ugly, blurry, poor quality, distorted",
+                    "num_inference_steps": 30,
+                    "guidance_scale": 7.5
+                }
+            }
         )
         
         if response.status_code == 200:
